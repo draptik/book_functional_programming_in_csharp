@@ -25,3 +25,9 @@ Add the following line to the `csproj` file:
 ```xml
 <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
 ```
+
+Running watcher:
+
+```
+dotnet watch test
+```

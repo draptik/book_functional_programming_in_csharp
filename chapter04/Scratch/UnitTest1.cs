@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Scratch
@@ -8,7 +9,7 @@ namespace Scratch
         [Fact]
         public void Test1()
         {
-
+            1.Should().Be(1);
         }
     }
 }
