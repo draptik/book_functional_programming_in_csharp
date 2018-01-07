@@ -6,44 +6,48 @@ using static Functional.F;
 
 namespace chapter03
 {
-    public class Exercise1
+    public enum DayOfWeek
     {
-        public enum Weekday
-        {
-            Monday,
-            Tuesday,
-            Wednesday,
-            Thursday,
-            Friday,
-            Saturday,
-            Sunday
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        Sunday
 
-        }
+    }
 
-        public static Option<Weekday> ParseWeekday(string input)
+    public static class Enum
+    {
+        public static Option<T> Parse<T>(string input)
         {
             throw new NotImplementedException("TODO");
         }
+    }
 
+    public class Exercise1
+    {
         [Fact]
         public void Parsing_valid_Weekdays_returns_Some()
         {
-            ParseWeekday("Monday").Should().Be(Some<Weekday>(Weekday.Monday));
-            ParseWeekday("Tuesday").Should().Be(Some<Weekday>(Weekday.Tuesday));
-            ParseWeekday("Wednesday").Should().Be(Some<Weekday>(Weekday.Wednesday));
-            ParseWeekday("Thursday").Should().Be(Some<Weekday>(Weekday.Thursday));
-            ParseWeekday("Friday").Should().Be(Some<Weekday>(Weekday.Friday));
-            ParseWeekday("Saturday").Should().Be(Some<Weekday>(Weekday.Saturday));
-            ParseWeekday("Sunday").Should().Be(Some<Weekday>(Weekday.Sunday));
+            
+            Enum.Parse<DayOfWeek>("Monday").Should().Be(Some<DayOfWeek>(DayOfWeek.Monday));
+            Enum.Parse<DayOfWeek>("Tuesday").Should().Be(Some<DayOfWeek>(DayOfWeek.Tuesday));
+            Enum.Parse<DayOfWeek>("Wednesday").Should().Be(Some<DayOfWeek>(DayOfWeek.Wednesday));
+            Enum.Parse<DayOfWeek>("Thursday").Should().Be(Some<DayOfWeek>(DayOfWeek.Thursday));
+            Enum.Parse<DayOfWeek>("Friday").Should().Be(Some<DayOfWeek>(DayOfWeek.Friday));
+            Enum.Parse<DayOfWeek>("Saturday").Should().Be(Some<DayOfWeek>(DayOfWeek.Saturday));
+            Enum.Parse<DayOfWeek>("Sunday").Should().Be(Some<DayOfWeek>(DayOfWeek.Sunday));
         }
         
         [Fact]
         public void Parsing_invalid_Weekdays_returns_None()
         {
-            ParseWeekday(null).Should().Be(None);
-            ParseWeekday("").Should().Be(None);
-            ParseWeekday("Invalid").Should().Be(None);
-            ParseWeekday("WednesdayX").Should().Be(None);
+            Enum.Parse<DayOfWeek>(null).Should().Be(None);
+            Enum.Parse<DayOfWeek>("").Should().Be(None);
+            Enum.Parse<DayOfWeek>("Invalid").Should().Be(None);
+            Enum.Parse<DayOfWeek>("WednesdayX").Should().Be(None);
         }
     }
 }
