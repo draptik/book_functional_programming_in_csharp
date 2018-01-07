@@ -8,24 +8,6 @@ namespace Scratch
     public class FunctionalHelpersTests
     {
         [Fact]
-        public void NoneReturnsNone()
-        {
-            var result = FunctionalHelpers.None;
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(Option.None));
-        }
-
-        [Fact]
-        public void SomeReturnsSome()
-        {
-            var result = FunctionalHelpers.Some("foo");
-            result.Should().NotBeNull();
-            result.Should().BeOfType(typeof(Option.Some<string>));
-            result.Value.Should().Be("foo");
-        }
-
-
-        [Fact]
         public void MapSimpleTest()
         {
             Func<int, int> times3 = x => x * 3;

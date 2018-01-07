@@ -7,10 +7,7 @@ namespace Scratch
 {
     public static class FunctionalHelpers
     {
-        public static Option.None None => Option.None.Default;
-
-        public static Option.Some<T> Some<T>(T value) => new Option.Some<T>(value);
-
+        
 
 
         // Simple implementation of LINQ's 'Select'
