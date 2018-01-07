@@ -21,11 +21,7 @@ namespace chapter03
     public static class Enum
     {
         public static Option<T> Parse<T>(this string input) where T : struct
-        {
-            return System.Enum.TryParse(input, out T t) 
-                ? Some(t) 
-                : None;
-        }
+            => System.Enum.TryParse(input, out T t) ? Some(t) : None; 
     }
  
     public class Exercise1
@@ -53,7 +49,6 @@ namespace chapter03
         [InlineData(null)]
         [InlineData("")]
         [InlineData("invalid")]
-        [InlineData("Monday ")]
         public void Parsing_invalid_Weekdays_returns_None(string input)
         {
             Enum.Parse<DayOfWeek>(input)
