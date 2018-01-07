@@ -6,6 +6,7 @@ using static Functional.F;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace chapter03
 {
@@ -17,23 +18,29 @@ namespace chapter03
                 Implicit conversion to string, so that it can easily be used with the typical API for sending emails
          */
 
-        // public struct Email
-        // {
-        //     private string Value { get; }
+        public struct Email
+        {
+            private string Value { get; }
 
-        //     private Email(string value)
-        //     {
-        //         if (!IsValid(value))
-        //         {
-        //             throw new ArgumentException("${value} is not a valid email address");
-        //         }
+            private Email(string value)
+            {
+                if (!IsValid(value))
+                {
+                    throw new ArgumentException("${value} is not a valid email address");
+                }
 
-        //         Value = value;
-        //     }
+                Value = value;
+            }
 
-        //     private static bool IsValid(string value)
-        //         => 
-        // }
+            private static bool IsValid(string value)
+            {
+                // Use the built-in email validation (instead of some Regex): 
+                //      EmailAddressAttribute().IsValid(...)
+                // Yes, this also works with .NET Core: Just include the following:
+                //      using System.ComponentModel.DataAnnotations;
+                return new EmailAddressAttribute().IsValid(value);
+            }
+        }
 
         [Fact]
         public void Email_cannot_be_created_with_an_invalid_string()
