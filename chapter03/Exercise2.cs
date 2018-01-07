@@ -11,6 +11,8 @@ namespace chapter03
 {
     public static class FunctionalExtensions
     {
+        // Arrow notation:
+        // IEnumerable<T> -> (T -> bool) ->  Option<T>
         public static Option<T> Lookup<T>(this IEnumerable<T> collection, Func<T, bool> predicate)
         {
             foreach (var item in collection)
