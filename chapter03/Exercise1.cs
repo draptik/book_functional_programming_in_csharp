@@ -20,18 +20,26 @@ namespace chapter03
 
     public static class Enum
     {
-        public static Option<T> Parse<T>(string input)
+        public static Option<T> Parse<T>(this string input) where T : struct
         {
-            throw new NotImplementedException("TODO");
+            return System.Enum.TryParse(input, out T t) 
+                ? Some(t) 
+                : None;
         }
     }
-
+ 
     public class Exercise1
     {
         [Fact]
-        public void Parsing_valid_Weekdays_returns_Some()
+        public void Parsing_string_to_enum_should_always_return_Option_DayOfWeek()
         {
-            
+            Enum.Parse<DayOfWeek>("invalid").Should().BeOfType(typeof(Option<DayOfWeek>));
+            Enum.Parse<DayOfWeek>("Monday").Should().BeOfType(typeof(Option<DayOfWeek>));
+        }
+
+        [Fact]
+        public void Parsing_valid_Weekdays_returns_Some_weekday()
+        {
             Enum.Parse<DayOfWeek>("Monday").Should().Be(Some<DayOfWeek>(DayOfWeek.Monday));
             Enum.Parse<DayOfWeek>("Tuesday").Should().Be(Some<DayOfWeek>(DayOfWeek.Tuesday));
             Enum.Parse<DayOfWeek>("Wednesday").Should().Be(Some<DayOfWeek>(DayOfWeek.Wednesday));
@@ -41,13 +49,19 @@ namespace chapter03
             Enum.Parse<DayOfWeek>("Sunday").Should().Be(Some<DayOfWeek>(DayOfWeek.Sunday));
         }
         
-        [Fact]
-        public void Parsing_invalid_Weekdays_returns_None()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("invalid")]
+        [InlineData("Monday ")]
+        public void Parsing_invalid_Weekdays_returns_None(string input)
         {
-            Enum.Parse<DayOfWeek>(null).Should().Be(None);
-            Enum.Parse<DayOfWeek>("").Should().Be(None);
-            Enum.Parse<DayOfWeek>("Invalid").Should().Be(None);
-            Enum.Parse<DayOfWeek>("WednesdayX").Should().Be(None);
+            Enum.Parse<DayOfWeek>(input)
+                .Match(
+                    None: () => "invalid",
+                    Some: (value) => "valid"
+                )
+                .Should().Be("invalid");
         }
     }
 }
