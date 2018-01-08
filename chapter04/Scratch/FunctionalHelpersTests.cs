@@ -45,5 +45,50 @@ namespace Scratch
             Action<int> Write = x => Console.Write(x.ToString());
             Enumerable.Range(1, 5).ForEach<int>(Write);
         }
+
+        [Fact]
+        public void BindForOptionTest()
+        {
+            Func<string, Option<Age>> parseAge = s => Int.Parse(s).Bind(Age.Of);
+
+            parseAge("26").IsSome().Should().BeTrue();
+            parseAge("invalid").IsSome().Should().BeFalse();
+            parseAge("180").IsSome().Should().BeFalse();
+        }
+
+        public struct Age
+        {
+            private int Value { get; }
+            private Age(int value)
+            {
+                if (!IsValid(value))
+                    throw new ArgumentException($"{value} is not a valid age");
+
+                Value = value;
+            }
+
+            private static bool IsValid(int age)
+                => 0 <= age && age < 120;
+
+            public static Option<Age> Of(int age)
+                => IsValid(age) ? Some(new Age(age)) : None;
+
+            public static bool operator <(Age l, Age r) => l.Value < r.Value;
+            public static bool operator >(Age l, Age r) => l.Value > r.Value;
+
+            public static bool operator <(Age l, int r) => l < new Age(r);
+            public static bool operator >(Age l, int r) => l > new Age(r);
+
+            public override string ToString() => Value.ToString();
+        }
+
+        public static class Int
+        {
+            public static Option<int> Parse(string s)
+            {
+                int result;
+                return int.TryParse(s, out result) ? Some(result) : None;
+            }
+        }
     }
 }
