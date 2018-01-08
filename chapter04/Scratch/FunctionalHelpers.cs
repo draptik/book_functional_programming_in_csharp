@@ -70,5 +70,25 @@ namespace Scratch
         // Bind function (Option -> IEnumerable)
         public static IEnumerable<R> Bind<T, R>(this Option<T> opt, Func<T, IEnumerable<R>> func)
             => opt.AsEnumerable().Bind(func);
+
+        // Exercise 1: Map function for ISet
+        public static ISet<R> Map<T, R>(this ISet<T> set, Func<T, R> f)
+        {
+            var rs = new HashSet<R>();
+            foreach (var entry in set)
+                rs.Add(f(entry));
+            return rs;
+        }
+        
+        // Exercise 1: Map function for IDictionary
+        public static IDictionary<K, R> Map<K, T, R>(this IDictionary<K, T> dict, Func<T, R> f)
+        {
+            var rs = new Dictionary<K, R>();
+            foreach (var kvp in dict)
+            {
+                rs[kvp.Key] = f(kvp.Value);
+            }
+            return rs;
+        }
     }
 }
