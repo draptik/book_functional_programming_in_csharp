@@ -73,7 +73,75 @@ namespace Scratch
             IEnumerable<Pet> flat = neighbors.Bind(n => n.Pets);
             // => ["Fluffy", "Thor", "Sybil"]
         }
-        
+
+        // Exercise 3
+        [Fact]
+        public void GetWorkPermit1Test()
+        {
+            var people = new Dictionary<string, Employee>
+            {
+                {"1", new Employee { Id = "1", WorkPermit = Some(new WorkPermit { Number = "11" })}},
+                {"2", new Employee { Id = "2", WorkPermit = None}},
+                {"3", new Employee { Id = "3", WorkPermit = Some(new WorkPermit { Number = "33" })}}
+            };
+
+            GetWorkPermit(people, "1").IsSome().Should().BeTrue();
+            GetWorkPermit(people, "2").IsSome().Should().BeFalse();
+            GetWorkPermit(people, "3").IsSome().Should().BeTrue();
+        }
+
+        Option<WorkPermit> GetWorkPermit(Dictionary<string, Employee> people, string employeeId) 
+            => people.Lookup(employeeId).Bind(e => e.WorkPermit);
+
+        // Exercise 3
+        [Fact]
+        public void GetWorkPermit2Test()
+        {
+            var now = DateTime.Now;
+
+            var people = new Dictionary<string, Employee>
+            {
+                {"1", new Employee { Id = "1", WorkPermit = Some(new WorkPermit { Number = "11", Expiry = now.AddYears(1) })}},
+                {"2", new Employee { Id = "2", WorkPermit = None}},
+                {"3", new Employee { Id = "3", WorkPermit = Some(new WorkPermit { Number = "33", Expiry = now.AddYears(-1) })}}
+            };
+
+            GetWorkPermitEnriched(people, "1").IsSome().Should().BeTrue();
+            GetWorkPermitEnriched(people, "2").IsSome().Should().BeFalse();
+            GetWorkPermitEnriched(people, "3").IsSome().Should().BeFalse();
+        }
+
+        Option<WorkPermit> GetWorkPermitEnriched(Dictionary<string, Employee> people, string employeeId) 
+            => people
+                .Lookup(employeeId)
+                .Bind(e => e.WorkPermit)
+                // .Where(e => !HasExpired(e.Expiry, new DateTime(2018, 1, 1)));
+                .Where(HasExpired.Negate());
+
+        // bool HasExpired(DateTime date, DateTime now) => date < now;
+
+        Func<WorkPermit, bool> HasExpired => permit => permit.Expiry < DateTime.Now;
+
+        // double AverageYearsWorkedAtTheCompany(List<Employee> employees) => // your implementation here...
+
+        public class Employee
+        {
+            public string Id { get; set; }
+            public Option<WorkPermit> WorkPermit { get; set; }
+
+            public DateTime JoinedOn { get; }
+            public Option<DateTime> LeftOn { get; }
+        }
+
+        public struct WorkPermit
+        {
+            public string Number { get; set; }
+            public DateTime Expiry { get; set; }
+        }  
+
+
+
+
         internal class Pet
         {
             private readonly string name;

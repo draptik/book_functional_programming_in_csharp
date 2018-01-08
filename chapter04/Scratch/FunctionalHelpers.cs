@@ -98,5 +98,14 @@ namespace Scratch
         // Exercise 2: Implement Map for Option and IEnumerable in terms of Bind and Return.
         public static IEnumerable<R> MapBindExercise<T, R>(this IEnumerable<T> list, Func<T, R> f) 
             => list.Bind(t => List(f(t)));
+
+        // Exercise 3
+        public static Option<T> Lookup<K, T>(this IDictionary<K, T> dict, K key) 
+        {                                                                                          
+            T value;
+            return dict.TryGetValue(key, out value) ? Some(value) : None;
+        }
+
+        public static Func<T, bool> Negate<T>(this Func<T, bool> predicate) => t => !predicate(t);
     }
 }
