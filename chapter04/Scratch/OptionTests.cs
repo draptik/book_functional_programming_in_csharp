@@ -11,7 +11,7 @@ namespace Functional.Tests
         [Fact]
         public void NoneReturnsNone()
         {
-            var result = F.None;
+            var result = None;
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(Option.None));
         }
@@ -19,7 +19,7 @@ namespace Functional.Tests
         [Fact]
         public void SomeReturnsSome()
         {
-            var result = F.Some("foo");
+            var result = Some("foo");
             result.Should().NotBeNull();
             result.Should().BeOfType(typeof(Option<string>));
         }
