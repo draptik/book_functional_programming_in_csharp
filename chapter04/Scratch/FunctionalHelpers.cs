@@ -90,5 +90,13 @@ namespace Scratch
             }
             return rs;
         }
+
+        // Exercise 2: Implement Map for Option and IEnumerable in terms of Bind and Return.
+        public static Option<R> MapBindExercise<T, R>(this Option<T> optT, Func<T, R> f) 
+            => optT.Bind(t => Some(f(t)));
+
+        // Exercise 2: Implement Map for Option and IEnumerable in terms of Bind and Return.
+        public static IEnumerable<R> MapBindExercise<T, R>(this IEnumerable<T> list, Func<T, R> f) 
+            => list.Bind(t => List(f(t)));
     }
 }
