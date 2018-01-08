@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using Xunit;
+using Functional;
+using static Functional.F;
 
 namespace Scratch
 {
@@ -23,6 +25,18 @@ namespace Scratch
             
             Enumerable.Range(1, 3).Map(times3)
                 .Should().Equal(3, 6, 9);
+        }
+
+        [Fact]
+        public void OptionMapTest()
+        {
+            Func<string, string> greet = name => $"Hello, {name}";
+
+            Option<string> _ = None;
+            Option<string> optJohn = Some("John");
+
+            _.Map(greet).IsSome().Should().BeFalse();
+            optJohn.Map(greet).IsSome().Should().BeTrue();
         }
     }
 }

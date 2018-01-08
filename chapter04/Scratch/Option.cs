@@ -28,6 +28,8 @@ namespace Functional
         public static implicit operator Option<T>(T value) => value == null ? None : Some(value);
 
         public R Match<R>(Func<R> None, Func<T, R> Some) => isSome ? Some(value) : None();
+
+        public bool IsSome() => isSome;
     }
 
     namespace Option
