@@ -1,4 +1,5 @@
 using System;
+using Unit = System.ValueTuple;
 
 namespace Functional
 {
@@ -8,6 +9,8 @@ namespace Functional
     {
         public static Option.None None => Option.None.Default;
         public static Option<T> Some<T>(T value) => new Option.Some<T>(value);
+
+        public static Unit Unit() => default(Unit);
     }
 
 

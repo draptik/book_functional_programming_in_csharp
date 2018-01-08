@@ -38,5 +38,12 @@ namespace Scratch
             _.Map(greet).IsSome().Should().BeFalse();
             optJohn.Map(greet).IsSome().Should().BeTrue();
         }
+
+        [Fact]
+        public void ForEachTest()
+        {
+            Action<int> Write = x => Console.Write(x.ToString());
+            Enumerable.Range(1, 5).ForEach<int>(Write);
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Functional;
 using Unit = System.ValueTuple;
@@ -9,9 +10,6 @@ namespace Scratch
 {
     public static class FunctionalHelpers
     {
-        
-
-
         // Simple implementation of LINQ's 'Select'
         public static IEnumerable<R> MapSimple<T, R>(this IEnumerable<T> ts, Func<T, R> f)
         {
@@ -27,9 +25,14 @@ namespace Scratch
         public static IEnumerable<R> Map<T, R>(this IEnumerable<T> ts, Func<T, R> f) 
             => ts.Select(f);
 
+        // Map function for Option type
         public static Option<R> Map<T, R>(this Option<T> optT, Func<T, R> f) 
             => optT.Match(
                 () => None,
                 (t) => Some(f(t)));
+
+        // Performing side effects with ForEach
+        public static IEnumerable<Unit> ForEach<T>(this IEnumerable<T> ts, Action<T> action)
+            => ts.Map(action.ToFunc()).ToImmutableList();
     }
 }
