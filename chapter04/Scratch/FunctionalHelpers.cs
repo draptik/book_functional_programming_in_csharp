@@ -62,5 +62,13 @@ namespace Scratch
             => optT.Match(
                 () => None,
                 (t) => predicate(t) ? optT : None);
+
+        // Bind function (IEnumerable -> Option)
+        public static IEnumerable<R> Bind<T, R>(this IEnumerable<T> list, Func<T, Option<R>> func)
+            => list.Bind(t => func(t).AsEnumerable());
+
+        // Bind function (Option -> IEnumerable)
+        public static IEnumerable<R> Bind<T, R>(this Option<T> opt, Func<T, IEnumerable<R>> func)
+            => opt.AsEnumerable().Bind(func);
     }
 }
