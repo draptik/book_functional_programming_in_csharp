@@ -26,12 +26,14 @@ namespace Scratch
             => ts.Select(f);
 
         // Map function for Option type
+        // Use 'Map' for logic (no side effects!)
         public static Option<R> Map<T, R>(this Option<T> optT, Func<T, R> f) 
             => optT.Match(
                 () => None,
                 (t) => Some(f(t)));
 
         // Performing side effects with ForEach
+        // Use 'ForEach' for side effects (not logic)
         public static IEnumerable<Unit> ForEach<T>(this IEnumerable<T> ts, Action<T> action)
             => ts.Map(action.ToFunc()).ToImmutableList();
     }
