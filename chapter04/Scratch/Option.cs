@@ -3,6 +3,7 @@ using Unit = System.ValueTuple;
 
 namespace Functional
 {
+    using System.Collections.Generic;
     using static F;
     
     public static partial class F
@@ -33,6 +34,11 @@ namespace Functional
         public R Match<R>(Func<R> None, Func<T, R> Some) => isSome ? Some(value) : None();
 
         public bool IsSome() => isSome;
+
+        public IEnumerable<T> AsEnumerable()
+        {
+            if (isSome) yield return value;
+        }
     }
 
     namespace Option
