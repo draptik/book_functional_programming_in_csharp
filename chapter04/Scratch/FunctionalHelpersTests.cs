@@ -4,6 +4,7 @@ using FluentAssertions;
 using Xunit;
 using Functional;
 using static Functional.F;
+using System.Collections.Generic;
 
 namespace Scratch
 {
@@ -54,6 +55,36 @@ namespace Scratch
             parseAge("26").IsSome().Should().BeTrue();
             parseAge("invalid").IsSome().Should().BeFalse();
             parseAge("180").IsSome().Should().BeFalse();
+        }
+
+        [Fact]
+        public void BindForIEnumerableTest()
+        {
+            var neighbors = new[]
+            {
+                new { Name = "John", Pets = new Pet[] {"Fluffy", "Thor"} },
+                new { Name = "Tim", Pets = new Pet[] {} },
+                new { Name = "Carl", Pets = new Pet[] {"Sybil"} },
+            };
+
+            IEnumerable<IEnumerable<Pet>> nested = neighbors.Map(n => n.Pets);
+            // => [["Fluffy", "Thor"], [], ["Sybil"]]
+
+            IEnumerable<Pet> flat = neighbors.Bind(n => n.Pets);
+            // => ["Fluffy", "Thor", "Sybil"]
+        }
+        
+        internal class Pet
+        {
+            private readonly string name;
+
+            private Pet(string name)
+            {
+                this.name = name;
+            }
+
+            public static implicit operator Pet(string name)
+                => new Pet(name);
         }
 
         public struct Age

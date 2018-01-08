@@ -43,5 +43,24 @@ namespace Scratch
             => optT.Match(
                 () => None,
                 (t) => f(t));
+
+        // Bind function for IEnumerable
+        // This corresponds to LINQ's SelectMany.
+        public static IEnumerable<R> Bind<T, R>(this IEnumerable<T> ts, Func<T, IEnumerable<R>> f)
+        {
+            foreach (T t in ts)
+                foreach (R r in f(t))
+                    yield return r;
+        }
+
+        // "Return" function for IEnumerable
+        public static IEnumerable<T> List<T>(params T[] items)
+            => items.ToImmutableList();
+
+        // Where function for Option
+        public static Option<T> Where<T>(this Option<T> optT, Func<T, bool> predicate)
+            => optT.Match(
+                () => None,
+                (t) => predicate(t) ? optT : None);
     }
 }
