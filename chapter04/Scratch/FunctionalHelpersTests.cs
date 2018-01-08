@@ -115,22 +115,38 @@ namespace Scratch
             => people
                 .Lookup(employeeId)
                 .Bind(e => e.WorkPermit)
-                // .Where(e => !HasExpired(e.Expiry, new DateTime(2018, 1, 1)));
                 .Where(HasExpired.Negate());
-
-        // bool HasExpired(DateTime date, DateTime now) => date < now;
 
         Func<WorkPermit, bool> HasExpired => permit => permit.Expiry < DateTime.Now;
 
-        // double AverageYearsWorkedAtTheCompany(List<Employee> employees) => // your implementation here...
+        // Exercise 4
+        [Fact]
+        public void AverageYearsWorkedAtTheCompanyTest()
+        {
+            var people = new List<Employee>
+            {
+                new Employee { Id = "1", JoinedOn = new DateTime(2000, 1, 1), LeftOn = Some(new DateTime(2010, 1, 1)) },
+                new Employee { Id = "2", JoinedOn = new DateTime(1999, 1, 1), LeftOn = None },
+                new Employee { Id = "3", JoinedOn = new DateTime(2000, 1, 1), LeftOn = Some(new DateTime(2006, 1, 1)) }
+            };
+
+            AverageYearsWorkedAtTheCompany(people).Should().BeApproximately(8, 1);
+        }
+
+        double AverageYearsWorkedAtTheCompany(List<Employee> employees) 
+            => employees
+                .Bind(e => e.LeftOn.Map(leftOn => YearsBetween(e.JoinedOn, leftOn)))
+                .Average();
+
+        static double YearsBetween(DateTime start, DateTime end) => (end - start).Days / 365d;
 
         public class Employee
         {
             public string Id { get; set; }
             public Option<WorkPermit> WorkPermit { get; set; }
 
-            public DateTime JoinedOn { get; }
-            public Option<DateTime> LeftOn { get; }
+            public DateTime JoinedOn { get; set; }
+            public Option<DateTime> LeftOn { get; set; }
         }
 
         public struct WorkPermit
