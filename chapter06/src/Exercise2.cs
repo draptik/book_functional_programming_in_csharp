@@ -25,13 +25,23 @@ namespace Chapter06
             // initial version: both functions return Option
             // Func<string, Option<string>> f1Option = s => Some(s);
             // Func<string, Option<string>> f2 = s => s;
-            // Func<string, Option<string>> bound1 = s => f1Option(s).Bind(f2);
+            // Func<string, Option<string>> bound = s => f1Option(s).Bind(f2);
 
             // first function returns Either
             Func<string, Either<string, string>> f1Either = s => Right(s);
             Func<string, Option<string>> f2 = s => s;
-            Func<string, Option<string>> bound2 = s => f1Either(s).Bind(f2);
-            bound2("foo").ToString().Should().Be("Some(foo)");
+            Func<string, Option<string>> bound = s => f1Either(s).Bind(f2);
+            bound("foo").ToString().Should().Be("Some(foo)");
+        }
+
+        [Fact]
+        public void Binding_Option_with_Either()
+        {
+            // second function returns Either
+            Func<string, Option<string>> f1 = s => Some(s);
+            Func<string, Either<string, string>> f2Either = s => Right(s);
+            Func<string, Option<string>> bound = s => f1(s).Bind(f2Either);
+            bound("foo").ToString().Should().Be("Some(foo)");
         }
     }
 
