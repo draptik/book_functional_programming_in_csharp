@@ -14,11 +14,12 @@ namespace Chapter06
                 Left: (l) => None,
                 Right: (r) => Some(r));
 
-        public static Either<string, R> ToEither<R>(this Option<R> option)
-            => option.Match<Either<string, R>>(
-                None: () => Left("failure"),
-                Some: (x) => Right(x));
+        public static Either<L, R> ToEither<L, R>(this Option<R> option, Func<L> failure)
+            => option.Match<Either<L, R>>(
+                None: () => failure(),
+                Some: (content) => Right(content));
     }
+    
     public class UnitTest1
     {
         // 1. Write a `ToOption` extension method to convert an `Either` into an
@@ -45,14 +46,14 @@ namespace Chapter06
         public void ToEither_converts_successfull_Option_to_Either()
         {
             Option<string> option = Some("success");
-            option.ToEither().ToString().Should().Be("Right(success)");
+            option.ToEither(() => "failure").ToString().Should().Be("Right(success)");
         }
         
         [Fact]
         public void ToEither_converts_failing_Option_to_Either()
         {
             Option<string> option = None;
-            option.ToEither().ToString().Should().Be("Left(failure)");
+            option.ToEither(() => "failure").ToString().Should().Be("Left(failure)");
         }
     }
 }
