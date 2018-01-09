@@ -7,19 +7,6 @@ using Xunit;
 
 namespace Chapter06
 {
-    public static class SomeExtensions
-    {
-        public static Option<R> ToOption<L, R>(this Either<L, R> either)
-            => either.Match(
-                Left: (l) => None,
-                Right: (r) => Some(r));
-
-        public static Either<L, R> ToEither<L, R>(this Option<R> option, Func<L> failure)
-            => option.Match<Either<L, R>>(
-                None: () => failure(),
-                Some: (content) => Right(content));
-    }
-
     // 1. Write a `ToOption` extension method to convert an `Either` into an
     // `Option`. Then write a `ToEither` method to convert an `Option` into an
     // `Either`, with a suitable parameter that can be invoked to obtain the
@@ -54,5 +41,18 @@ namespace Chapter06
             Option<string> option = None;
             option.ToEither(() => "failure").ToString().Should().Be("Left(failure)");
         }
+    }
+
+    public static class SomeExtensions
+    {
+        public static Option<R> ToOption<L, R>(this Either<L, R> either)
+            => either.Match(
+                Left: (l) => None,
+                Right: (r) => Some(r));
+
+        public static Either<L, R> ToEither<L, R>(this Option<R> option, Func<L> failure)
+            => option.Match<Either<L, R>>(
+                None: () => failure(),
+                Some: (content) => Right(content));
     }
 }
