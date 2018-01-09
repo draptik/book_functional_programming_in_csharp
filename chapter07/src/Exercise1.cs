@@ -20,5 +20,14 @@ namespace Chapter07
      */
     public class Exercise1
     {
+        Func<int, int, int> Remainder = (dividend, divisor) => dividend % divisor;
+
+        [Theory]
+        [InlineData(4, 2, 0)]
+        [InlineData(4, 3, 1)]
+        [InlineData(5, 3, 2)]
+        [InlineData(-5, 3, -2)]
+        public void Remainder_is_calculated_correctly(int dividend, int divisor, int expected) 
+            => Remainder(dividend, divisor).Should().Be(expected);
     }
 }
