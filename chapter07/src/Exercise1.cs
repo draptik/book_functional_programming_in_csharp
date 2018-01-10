@@ -47,6 +47,14 @@ namespace Chapter07
             var remainderBy5 = Remainder.ApplyR(5);
             remainderBy5(dividend).Should().Be(expected);
         }
+
+        [Fact]
+        public void ApplyR_returns_rightmost_parameter_to_ternary_function()
+        {
+            // TODO: Revisit this later...
+            Func<int, string, double, bool> fun = (i, s, d) => true;
+            fun.ApplyR(1.0).Should().BeOfType(typeof(Func<int, string, bool>));
+        }
     }
 
     public static class Extensions
@@ -55,5 +63,8 @@ namespace Chapter07
         // (T1 -> T2 -> R) -> T2 -> T1 -> R (curried) 
         public static Func<T1, R> ApplyR<T1, T2, R>(this Func<T1, T2, R> func, T2 t2)
             => t1 => func(t1, t2);
+
+        public static Func<T1, T2, R> ApplyR<T1, T2, T3, R>(this Func<T1, T2, T3, R> func, T3 t3)
+            => (t1, t2) => func(t1, t2, t3);
     }
 }
