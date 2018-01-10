@@ -15,9 +15,22 @@ namespace Chapter07
      */
     public class Exercise3
     {
-        // Use string return type for easier Unit Testing
-        // string ConsumeLog(Log log) => log.Info("look! no classes!");
+        // TODO: Revisit this later
+    }
 
-        // Func<>
+    public static class LogExtensions
+    {
+        public enum Level { Debug, Info, Error }
+
+        public delegate void Log(Level level, string message);
+
+        public static Log consoleLogger = (Level level, string message) => Console.WriteLine($"[{level}]: {message}");
+
+        public static void Debug(this Log log, string message) => log(Level.Debug, message);
+        public static void Info(this Log log, string message) => log(Level.Info, message);
+        public static void Error(this Log log, string message) => log(Level.Error, message);
+
+        public static void _main() => ConsumeLog(consoleLogger);
+        public static void ConsumeLog(Log log) => log.Info("look! no classes!");
     }
 }
