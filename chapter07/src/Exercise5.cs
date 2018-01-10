@@ -25,8 +25,26 @@ namespace Chapter07
         [Fact]
         public void Bind_with_Aggregate_works()
         {
-            // TODO
+            var outerList = new List<Outer>
+            {
+                new Outer(1) { InnerList = new List<Inner>  { new Inner(1), new Inner(2), new Inner(3) } },
+                new Outer(2) { InnerList = new List<Inner>  { new Inner(4), new Inner(5), new Inner(6) } },
+            };
         }
+    }
+
+    public class Inner
+    {
+        public int InnerNumber { get; }
+        public Inner(int number) => InnerNumber = number;
+    }
+
+    public class Outer
+    {
+        public int OuterNumber { get; }
+        public IEnumerable<Inner> InnerList { get; set; } = new List<Inner>();
+
+        public Outer(int number) => OuterNumber = number;
     }
 
     public static class EnumerableExtensions
