@@ -16,11 +16,11 @@ namespace Chapter07
     {
         [Fact]
         public void Map_with_Aggregate_works()
-            => Range(1, 5).Map(x => x * x).Should().Equal(1, 4, 9, 16, 25);
+            => Range(1, 5).MapWithAggregate(x => x * x).Should().Equal(1, 4, 9, 16, 25);
 
         [Fact]
         public void Where_with_Aggregate_works()
-            => Range(1, 5).Where(x => x % 2 == 0).Should().Equal(2, 4);
+            => Range(1, 5).WherewithAggregate(x => x % 2 == 0).Should().Equal(2, 4);
 
         [Fact]
         public void Bind_with_Aggregate_works()
@@ -30,6 +30,10 @@ namespace Chapter07
                 new Outer(1) { InnerList = new List<Inner>  { new Inner(1), new Inner(2), new Inner(3) } },
                 new Outer(2) { InnerList = new List<Inner>  { new Inner(4), new Inner(5), new Inner(6) } },
             };
+
+            // Get a list of `InnerNumber`s.
+            var result = outerList.BindWithAggregate(o => o.InnerList);
+            result.Count().Should().Be(6);
         }
     }
 
@@ -47,9 +51,11 @@ namespace Chapter07
         public Outer(int number) => OuterNumber = number;
     }
 
+    
+
     public static class EnumerableExtensions
     {
-        public static IEnumerable<R> Map<T, R>(this IEnumerable<T> list, Func<T, R> func)
+        public static IEnumerable<R> MapWithAggregate<T, R>(this IEnumerable<T> list, Func<T, R> func)
             => list.Aggregate(new List<R>(), (acc, t)
                 =>
                 {
@@ -58,7 +64,7 @@ namespace Chapter07
                 });
 
 
-        public static IEnumerable<T> Where<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
+        public static IEnumerable<T> WherewithAggregate<T>(this IEnumerable<T> @this, Func<T, bool> predicate)
             => @this.Aggregate(new List<T>(), (acc, t)
                 =>
                 {
@@ -69,7 +75,7 @@ namespace Chapter07
                     return acc;
                 });
 
-        public static IEnumerable<R> Bind<T, R>(this IEnumerable<T> ts, Func<T, IEnumerable<R>> func) 
+        public static IEnumerable<R> BindWithAggregate<T, R>(this IEnumerable<T> ts, Func<T, IEnumerable<R>> func) 
             => ts.Aggregate(new List<R>(), (acc, t)
                 =>
                 {
@@ -82,12 +88,11 @@ namespace Chapter07
                     return acc;
                 });
 
-        public static IEnumerable<R> Bind_Normal<T, R>(this IEnumerable<T> ts, Func<T, IEnumerable<R>> f)
-        {
-            foreach (T t in ts)
-                foreach (R r in f(t))
-                    yield return r;
-        }
-
+        // public static IEnumerable<R> Bind_Normal<T, R>(this IEnumerable<T> ts, Func<T, IEnumerable<R>> f)
+        // {
+        //     foreach (T t in ts)
+        //         foreach (R r in f(t))
+        //             yield return r;
+        // }
     }
 }
