@@ -15,5 +15,9 @@ namespace Chapter07
      */
     public class Exercise3
     {
+        // Use string return type for easier Unit Testing
+        // string ConsumeLog(Log log) => log.Info("look! no classes!");
+
+        // Func<>
     }
 }
