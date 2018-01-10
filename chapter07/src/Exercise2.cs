@@ -33,7 +33,7 @@ namespace Chapter07
             result.Should().BeOfType(typeof(CountryCode));
         }
 
-        Func<CountryCode, NumberType, string, PhoneNumber> PhoneNumberFactory
+        static Func<CountryCode, NumberType, string, PhoneNumber> PhoneNumberFactory
             = (country, type, number) => new PhoneNumber(type, country, number);
 
         [Fact]
@@ -45,6 +45,21 @@ namespace Chapter07
             phoneNumber.Number.Should().Be("123");
             phoneNumber.CountryCode.Value.Should().Be("de");
         }
+
+        static Func<NumberType, string, PhoneNumber> CreateUkNumber = PhoneNumberFactory.Apply((CountryCode)"uk");
+
+        [Theory]
+        [InlineData(NumberType.Home, "42", "Home, uk, 42")]
+        [InlineData(NumberType.Mobile, "42", "Mobile, uk, 42")]
+        [InlineData(NumberType.Office, "42", "Office, uk, 42")]
+        public void CreateUkNumber_does_what_it_says(NumberType type, string number, string expected) 
+            => CreateUkNumber(type, number).ToString().Should().Be(expected);
+
+        static Func<string, PhoneNumber> CreateUkMobileNumber = CreateUkNumber.Apply(NumberType.Mobile);
+
+        [Fact]
+        public void CreateUkModuleNumber_does_what_it_says()
+            => CreateUkMobileNumber("42").ToString().Should().Be("Mobile, uk, 42");
     }
 
     class CountryCode
@@ -56,7 +71,7 @@ namespace Chapter07
         public override string ToString() => Value;
     }
 
-    enum NumberType { Mobile, Home, Office }
+    public enum NumberType { Mobile, Home, Office }
 
     class PhoneNumber
     {
@@ -70,5 +85,7 @@ namespace Chapter07
             CountryCode = countryCode;
             Number = number;
         }
+
+        public override string ToString() => $"{NumberType.ToString()}, {CountryCode.ToString()}, {Number}";
     }
 }
