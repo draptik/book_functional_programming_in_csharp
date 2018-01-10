@@ -18,6 +18,20 @@ namespace Chapter07
      */
     public class Exercise2
     {
+        [Fact]
+        public void Implicit_conversion_from_CountryCode_to_string()
+        {
+            var countryCode = new CountryCode("de");
+            string result = countryCode;
+            result.Should().Be("de");
+        }
+
+        [Fact]
+        public void Implicit_conversion_from_string_to_CountryCode()
+        {
+            CountryCode result = "de";
+            result.Should().BeOfType(typeof(CountryCode));
+        }
     }
 
     class CountryCode
