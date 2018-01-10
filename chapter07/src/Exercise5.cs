@@ -17,6 +17,10 @@ namespace Chapter07
         [Fact]
         public void Map_with_Aggregate_works() 
             => Range(1, 5).Map(x => x * x).Should().Equal(1, 4, 9, 16, 25);
+        
+        [Fact]
+        public void Where_with_Aggregate_works() 
+            => Range(1, 5).Where(x => x % 2 == 0).Should().Equal(2, 4);
     }
 
     public static class EnumerableExtensions
@@ -30,10 +34,16 @@ namespace Chapter07
                 });
 
 
-        // public static IEnumerable<R> Where<T, R>(this IEnumerable<T> @this, Func<T, R> func)
-        // {
-        //     return null;
-        // }
+        public static IEnumerable<T> Where<T>(this IEnumerable<T> @this, Func<T, bool> predicate) 
+            => @this.Aggregate(new List<T>(), (acc, t)
+                =>
+                {
+                    if (predicate(t))
+                    {
+                        acc.Add(t);
+                    }
+                    return acc;
+                });
 
         // public static IEnumerable<R> Bind<T, R>(this IEnumerable<T> @this, Func<T, R> func)
         // {
