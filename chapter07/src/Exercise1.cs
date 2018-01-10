@@ -37,6 +37,16 @@ namespace Chapter07
             Func<int, string, bool> fun = (i, s) => true;
             fun.ApplyR("someString").Should().BeOfType(typeof(Func<int, bool>));
         }
+
+        [Theory]
+        [InlineData(10, 0)]
+        [InlineData(11, 1)]
+        [InlineData(14, 4)]
+        public void Returns_remainder_of_division_by_5(int dividend, int expected)
+        {
+            var remainderBy5 = Remainder.ApplyR(5);
+            remainderBy5(dividend).Should().Be(expected);
+        }
     }
 
     public static class Extensions
