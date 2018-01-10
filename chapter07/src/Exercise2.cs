@@ -32,22 +32,43 @@ namespace Chapter07
             CountryCode result = "de";
             result.Should().BeOfType(typeof(CountryCode));
         }
+
+        Func<CountryCode, NumberType, string, PhoneNumber> PhoneNumberFactory
+            = (country, type, number) => new PhoneNumber(type, country, number);
+
+        [Fact]
+        public void PhoneNumberFactory_creates_PhoneNumber_with_correct_properties()
+        {
+            var phoneNumber = PhoneNumberFactory((CountryCode)"de", NumberType.Home, "123");
+            phoneNumber.Should().BeOfType(typeof(PhoneNumber));
+            phoneNumber.NumberType.Should().Be(NumberType.Home);
+            phoneNumber.Number.Should().Be("123");
+            phoneNumber.CountryCode.Value.Should().Be("de");
+        }
     }
 
     class CountryCode
     {
         public string Value { get; }
-
         public CountryCode(string value) => Value = value;
-
         public static implicit operator CountryCode(string countryCode) => new CountryCode(countryCode);
         public static implicit operator string(CountryCode countryCode) => countryCode.Value;
+        public override string ToString() => Value;
     }
+
+    enum NumberType { Mobile, Home, Office }
 
     class PhoneNumber
     {
-        public string NumberType { get; set; }
-        public string Value { get; set; }
-        public CountryCode CountryCode { get; set; }
+        public NumberType NumberType { get; }
+        public string Number { get; }
+        public CountryCode CountryCode { get; }
+
+        public PhoneNumber(NumberType type, CountryCode countryCode, string number)
+        {
+            NumberType = type;
+            CountryCode = countryCode;
+            Number = number;
+        }
     }
 }
