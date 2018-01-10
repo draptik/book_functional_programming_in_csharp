@@ -19,4 +19,21 @@ namespace Chapter07
     public class Exercise2
     {
     }
+
+    class CountryCode
+    {
+        public string Value { get; }
+
+        public CountryCode(string value) => Value = value;
+
+        public static implicit operator CountryCode(string countryCode) => new CountryCode(countryCode);
+        public static implicit operator string(CountryCode countryCode) => countryCode.Value;
+    }
+
+    class PhoneNumber
+    {
+        public string NumberType { get; set; }
+        public string Value { get; set; }
+        public CountryCode CountryCode { get; set; }
+    }
 }
